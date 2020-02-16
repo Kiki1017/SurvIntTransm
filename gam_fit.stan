@@ -22,8 +22,8 @@ parameters {
 }
 
 model {
-    alpha ~ uniform(0, 100);
-    beta ~ uniform(0, 100);
+    alpha ~ uniform(0, 10);
+    beta ~ uniform(0, 10);
     days_imp ~ gamma(alpha, beta);
 }
 

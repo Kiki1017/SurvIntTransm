@@ -29,11 +29,12 @@ p.exp<-function(gamma, rho, m){
 p.gam<-function(k, r, rho, m){
   theta<-1/r
   R<-beta*(1-rho)*k*theta
-  fun<-function(p) (1-p^m)*(1+p*R/k)^k-1
+  fun<-function(p) (1-p)*(1+p*R/k)^k-1
   p.sol<-uniroot.all(fun, c(0, 1))
   p<-max(p.sol)
   if(!is.numeric(p)) p<-0
-  return(pmax(0,p))
+  q<-1-p
+  return(pmax(0,1-q^m))
 }
 
 ##########################
@@ -64,9 +65,9 @@ ui = fluidPage(
                     label = "Number of imported cases",
                     min = 1, max = 100, step = 1, value = 10),
     sliderInput('red.transm', 
-                    label = "Reduction in transmission reduction",
-                    min = 0, max = 1, step = 0.001, value = 0.1),
-  	 selectInput('distribution', "Distribution:", choices = c("Exponential", "Gamma"),  selected = "Exponential")
+                    label = "Reduction in transmission period",
+                    min = 0, max = 1, step = 0.01, value = 0.1),
+  	 selectInput('distribution', "Distribution of time from symptoms onset to hospitalisation:", choices = c("Exponential", "Gamma"),  selected = "Exponential")
  	),
 	#Main panel for figures and equations
 	mainPanel(     
@@ -95,13 +96,13 @@ server = function(input, output) {
      } else {
 		  x <- readdatafile()
      }
-    df <- data.frame(id=1:nrow(x),days=x$X6)
+    df <- data.frame(id=1:nrow(x),days=x[,1])
     df$upper <- ifelse(df$days==0,0,df$days+1)
     df$lower <- ifelse(df$days==0,0,df$days-1)
     
     fig1<-ggplot(data = df, aes(x=days, color='red')) +
       geom_histogram( binwidth  = 1, fill="white", show.legend = FALSE, size=1.1) +
-    ggtitle('Observed infection period')  + xlab('Days')+ ylab("Counts")
+    ggtitle('Observed time from symptoms onset to hospitalisation')  + xlab('Days')+ ylab("Counts")
     
     days<-seq(0.1, 15, 0.1)
     
@@ -118,7 +119,7 @@ server = function(input, output) {
      dots <- data.frame(x=days, y=dexp(days, param[ind[1]]))
        
      fig2 <-ggplot(data = dots, aes(x=x,y=y))+ geom_line(color= 'blue', size=0.5)  +
-       labs(x = 'Days', y='PDF') + ggtitle('Fitted infection period') 
+       labs(x = 'Days', y='PDF') + ggtitle('Fitted time from symptoms onset to hospitalisation') 
      
      for(i in 2:length(ind)){
        dots <- data.frame(x=days, y=dexp(days, param[ind[i]]))
