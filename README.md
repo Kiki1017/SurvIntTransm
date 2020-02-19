@@ -14,7 +14,7 @@ The app fits to the observed days from symptom onset to hispitalisatio either ex
 
 ## Results
 
-## References
+### References
 [1]  Thompson, R.N. (2020) J. Clin. Med.  9(2), 498. https://doi.org/10.3390/jcm9020498 
 
 [2] Thompson, R.N., Jalava, K., Obolski, U. (2019) Sustained transmission of Ebola in new locations: more likely than previously thought. Lancet Infect Dis. 19: 1058–27859. https://doi.org/10.1016/S1473-3099(19)30483-9
