@@ -7,8 +7,10 @@
 library(shiny)
 library(ggplot2)
 library(gridExtra, quietly = T)
+library(grid)
 library(rstan, quietly = T)
 library(rootSolve)
+library(loo)
 
 
 
@@ -77,7 +79,8 @@ ui = fluidPage(
 
 
 server = function(input, output) {
-  readdatafile <- reactive({
+ 
+   readdatafile <- reactive({
     inFile <- input$file
     if (is.null(inFile))  return(NULL)
     
@@ -134,8 +137,13 @@ server = function(input, output) {
      ans<-data.frame(cases=c("No intensification", "With intensification"), prob=c(mean(prob0), mean(prob1)), low=c(lm0[1], lm1[1]), upp=c(lm0[2], lm1[2]))
      ans$cases<-as.factor(ans$cases)
      
+     log_lik1 <- extract_log_lik(fit1, merge_chains = FALSE)
+     rel_n_eff <- relative_eff(exp(log_lik1))
+     loo.sum<-loo(log_lik1, r_eff = rel_n_eff, cores = 2)
+     
      fig3 <- ggplot(ans, aes(x=cases, y=prob)) +    geom_bar(color="black", fill="blue", stat = "identity")  + labs(x="Surveilance", y = "Prob(Sustained transmission)") + theme_bw() +ggtitle("Surveilance intensification")  +ylim(c(0,1)) # +  geom_errorbar(aes(ymin=low, ymax=upp), width=.2,  position=position_dodge(.9)) + theme(text = element_text(size=12))
-   }  else {
+     fig4<-tableGrob(loo.sum$estimates)
+     }  else {
      
      fit1 <- stan(file = "gam_fit.stan",
                   data = list(N=nrow(df),low=df$lower,up=df$upper))
@@ -165,12 +173,17 @@ server = function(input, output) {
      ans<-data.frame(cases=c("No intensification", "With intensification"), prob=c(mean(prob0), mean(prob1)), low=c(lm0[1], lm1[1]), upp=c(lm0[2], lm1[2]))
      ans$cases<-as.factor(ans$cases)
      
-     fig3 <- ggplot(ans, aes(x=cases, y=prob)) +    geom_bar(color="black", fill="blue", stat = "identity")  + labs(x="Surveilance", y = "Prob(Sustained transmission)") + theme_bw() +ggtitle("Surveilance intensification")  +ylim(c(0,1)) # +  geom_errorbar(aes(ymin=low, ymax=upp), width=.2,  position=position_dodge(.9)) + theme(text = element_text(size=12))
+     log_lik1 <- extract_log_lik(fit1, merge_chains = FALSE)
+     rel_n_eff <- relative_eff(exp(log_lik1))
+     loo.sum<-loo(log_lik1, r_eff = rel_n_eff, cores = 2)
      
+     
+     fig3 <- ggplot(ans, aes(x=cases, y=prob)) +    geom_bar(color="black", fill="blue", stat = "identity")  + labs(x="Surveilance", y = "Prob(Sustained transmission)") + theme_bw() +ggtitle("Surveilance intensification")  +ylim(c(0,1)) # +  geom_errorbar(aes(ymin=low, ymax=upp), width=.2,  position=position_dodge(.9)) + theme(text = element_text(size=12))
+     fig4<-tableGrob(loo.sum$estimates)
    }
-    
-    grid.arrange(arrangeGrob(fig1, fig2), fig3, nrow=1, widths=c(2,1.5))
+    grid.arrange(fig1, fig4, fig2 ,fig3, nrow=2, widths=c(2,1.5))
   })
+   
 
  } #End of server()
 

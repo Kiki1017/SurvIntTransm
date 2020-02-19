@@ -26,3 +26,9 @@ model {
     days_imp ~ exponential(lambda);
 }
 
+generated quantities {
+  vector[N] log_lik;
+  for (n in 1:N) {
+    log_lik[n] = exponential_lpdf(days_imp[n] | lambda);
+  }
+}

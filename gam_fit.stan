@@ -27,3 +27,9 @@ model {
     days_imp ~ gamma(alpha, beta);
 }
 
+generated quantities {
+  vector[N] log_lik;
+  for (n in 1:N) {
+    log_lik[n] = gamma_lpdf(days_imp[n] | alpha, beta);
+  }
+}
