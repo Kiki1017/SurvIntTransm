@@ -1,12 +1,12 @@
 # SurvIntTransm
 Influence of intensity of surveillance for preventing sustained transmission of covid19 in new locations
 
-##Introduction
+## Introduction
 
-##Methods
+## Methods
 
-##Requirements
+## Requirements
 
-##Results
+## Results
 
-##References
+## References
