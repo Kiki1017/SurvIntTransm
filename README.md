@@ -7,7 +7,7 @@ You will need to have shiny package installed:
 library(shiny)
 runGitHub("SurvIntTransm", "rretkute")
 ```
-Note that this app depends on different R packages, including:
+Note that this app requires the following R packages:
 * [ggplot2](https://ggplot2.tidyverse.org/)
 * [grid](https://www.rdocumentation.org/packages/grid/versions/3.6.2)
 * [gridExtra](https://cran.r-project.org/web/packages/gridExtra/index.html) 
