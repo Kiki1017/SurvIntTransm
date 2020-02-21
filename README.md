@@ -17,7 +17,7 @@ Note that this app requires the following R packages:
 
 ## 2. Methods
 ###  2.1.Model 
-The app fits to the observed days from symptom onset to hispitalisatio either exponental [1], or gamma distrubution [2].
+The app fits to the observed days from symptom onset to hospitalisatio either exponental [1], or gamma distrubution [2].
 
 ###  2.2.Leave-one-out cross-validation  
 [3]
