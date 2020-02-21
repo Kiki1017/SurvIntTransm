@@ -2,7 +2,7 @@
 Influence of intensity of surveillance for preventing sustained transmission of covid19 in new locations
 
 ## 1. Running the app
-You will need to have shiny package installed:
+You will need to have [shiny](https://www.r-project.org/nosvn/pandoc/shiny.html) package installed:
 ```r
 library(shiny)
 runGitHub("SurvIntTransm", "rretkute")
