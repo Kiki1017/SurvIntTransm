@@ -22,6 +22,9 @@ The app fits to the observed days from symptom onset to hispitalisatio either ex
 ###  2.2.Leave-one-out cross-validation  
 [3]
 
+## 3. Results
+Figure below shows exponential distribution fitted to the early outbreak data [1].
+![](figure/image_app.png)
 
 ### References
 [1]  Thompson, R.N. (2020) J. Clin. Med.  9(2), 498. https://doi.org/10.3390/jcm9020498 
