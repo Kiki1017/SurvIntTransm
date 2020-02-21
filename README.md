@@ -1,18 +1,27 @@
 # SurvIntTransm
 Influence of intensity of surveillance for preventing sustained transmission of covid19 in new locations
 
-## Introduction
+## 1. Running the app
+You will need to have shiny package installed:
+```r
+library(shiny)
+runGitHub("SurvIntTransm", "rretkute")
+```
+Note that this app depends on different R packages, including:
+* [ggplot2](https://ggplot2.tidyverse.org/)
+* [grid](https://www.rdocumentation.org/packages/grid/versions/3.6.2)
+* [gridExtra](https://cran.r-project.org/web/packages/gridExtra/index.html) 
+* [rstan](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started)
+* [rootSolve](https://cran.r-project.org/web/packages/rootSolve/index.html)
+* [loo](https://cran.r-project.org/web/packages/loo/index.html)
 
-## Methods
-###  Model 
+## 2. Methods
+###  2.1.Model 
 The app fits to the observed days from symptom onset to hispitalisatio either exponental [1], or gamma distrubution [2].
 
-###  Leave-one-out cross-validation  
+###  2.2.Leave-one-out cross-validation  
 [3]
 
-## Requirements
-
-## Results
 
 ### References
 [1]  Thompson, R.N. (2020) J. Clin. Med.  9(2), 498. https://doi.org/10.3390/jcm9020498 
