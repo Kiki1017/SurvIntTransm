@@ -27,7 +27,6 @@ p.exp<-function(gamma, rho, m){
   pmax(0, 1-(1/(beta*(1-rho)/gamma))^m)
 }
 
-# k<-param1[1]; r<-param2[1]; rho<-0.2; m<-10
 p.gam<-function(k, r, rho, m){
   theta<-1/r
   R<-beta*(1-rho)*k*theta
@@ -97,8 +96,9 @@ server = function(input, output) {
     if (is.null(inFile))  {
       x <- read.csv("earlyCases.csv")
       df <- data.frame(id=1:nrow(x),days=x[,1])
-      df$upper <- ifelse(df$days==0,0,df$days+1)
+      df$upper <- ifelse(df$days==0,1,df$days+1)
       df$lower <- ifelse(df$days==0,0,df$days-1)
+      df$lower <- ifelse(df$lower == 0, 1e-06, df$lower)
       
       fig1<-ggplot(data = df, aes(x=days, color='red')) +
         geom_histogram( binwidth  = 1, fill="white", show.legend = FALSE, size=1.1) +
@@ -107,7 +107,7 @@ server = function(input, output) {
       days<-seq(0.1, 15, 0.1)
       
       if(input$distribution=='Exponential'){
-          fit1<-readRDS("default_fit_exp.rds")
+          fit1<-readRDS("default_fit_exp_new.rds")
           res <- extract(fit1)
           param<-res$lambda
           
@@ -138,7 +138,7 @@ server = function(input, output) {
           fig4<-tableGrob(loo.sum$estimates)
           
       }  else {
-        fit1<-readRDS("default_fit_gam.rds")
+        fit1<-readRDS("default_fit_gam_new.rds")
         res <- extract(fit1)
         
         param1<-res$alpha 
@@ -178,8 +178,9 @@ server = function(input, output) {
      } else {
 		  x <- readdatafile()
     df <- data.frame(id=1:nrow(x),days=x[,1])
-    df$upper <- ifelse(df$days==0,0,df$days+1)
+    df$upper <- ifelse(df$days==0,1,df$days+1)
     df$lower <- ifelse(df$days==0,0,df$days-1)
+    df$lower <- ifelse(df$lower == 0, 1e-06, df$lower)
     
     fig1<-ggplot(data = df, aes(x=days, color='red')) +
       geom_histogram( binwidth  = 1, fill="white", show.legend = FALSE, size=1.1) +
@@ -199,12 +200,12 @@ server = function(input, output) {
      ind<-sample(1:length(param), 50, replace=F)
      dots <- data.frame(x=days, y=dexp(days, param[ind[1]]))
        
-     fig2 <-ggplot(data = dots, aes(x=x,y=y))+ geom_line(color= 'blue', size=0.5)  +
+     fig2 <-ggplot(data = dots, aes(x=x,y=y))+ geom_line(color= 'gray', size=0.5)  +
        labs(x = 'Days', y='PDF') + ggtitle('Fitted time from symptoms onset to hospitalisation') 
      
      for(i in 2:length(ind)){
        dots <- data.frame(x=days, y=dexp(days, param[ind[i]]))
-       fig2<- fig2 +  geom_line(data = dots, aes(x=x,y=y), color= 'blue', size=0.5)
+       fig2<- fig2 +  geom_line(data = dots, aes(x=x,y=y), color= 'gray', size=0.5)
      }
      
      prob0<-p.exp(param, 0, m)
@@ -234,12 +235,12 @@ server = function(input, output) {
      ind<-sample(1:length(param1), 50, replace=F)
      dots <- data.frame(x=days, y=dgamma(days, shape=param1[ind[1]], rate=param2[ind[1]]))
      
-     fig2 <-ggplot(data = dots, aes(x=x,y=y))+ geom_line(color= 'blue', size=0.5)  +
+     fig2 <-ggplot(data = dots, aes(x=x,y=y))+ geom_line(color= 'gray', size=0.5)  +
        labs(x = 'Days', y='PDF') + ggtitle('Fitted infection period') 
      
      for(i in 2:length(ind)){
        dots <- data.frame(x=days, y=dgamma(days, shape= param1[ind[i]], rate=param2[ind[i]]))
-       fig2<- fig2 +  geom_line(data = dots, aes(x=x,y=y), color= 'blue', size=0.5)
+       fig2<- fig2 +  geom_line(data = dots, aes(x=x,y=y), color= 'gray', size=0.5)
      }
      
 
